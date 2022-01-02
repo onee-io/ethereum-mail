@@ -9,12 +9,6 @@ typechain
 cache
 artifacts
 
-# nuxt.js build output
-.nuxt
-
-# Nuxt generate
-dist
-
 # macOS
 .DS_Store
 
