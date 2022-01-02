@@ -12,7 +12,25 @@ let routes = [
 	{
 		path: '/',
 		name: 'Home',
-		redirect: '/dashboard',
+		redirect: '/inbox',
+	},
+	{
+		path: '/inbox',
+		name: 'Inbox',
+		layout: "dashboard",
+		component: () => import('../views/Inbox.vue'),
+	},
+	{
+		path: '/sent',
+		name: 'Sent',
+		layout: "dashboard",
+		component: () => import('../views/Sent.vue'),
+	},
+	{
+		path: '/layout',
+		name: 'Layout',
+		layout: "dashboard",
+		component: () => import('../views/Layout.vue'),
 	},
 	{
 		path: '/dashboard',
