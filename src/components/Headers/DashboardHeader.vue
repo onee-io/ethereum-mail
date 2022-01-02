@@ -83,13 +83,27 @@
 						</svg>
 						<span>Sign In</span>
 					</router-link> -->
-					<a-button type="link" ref="secondarySidebarTriggerBtn" @click="connectWallet">
-						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+
+					<!-- 已连接钱包 -->
+					<div v-if="selectedAddress">
+						<a-button type="dashed" shape="round">{{ selectedAddress }}</a-button>
+						<!-- <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM12 7C12 8.10457 11.1046 9 10 9C8.89543 9 8 8.10457 8 7C8 5.89543 8.89543 5 10 5C11.1046 5 12 5.89543 12 7ZM9.99993 11C7.98239 11 6.24394 12.195 5.45374 13.9157C6.55403 15.192 8.18265 16 9.99998 16C11.8173 16 13.4459 15.1921 14.5462 13.9158C13.756 12.195 12.0175 11 9.99993 11Z" fill="#111827"/>
 						</svg>
-						<!-- <a-icon type="wallet" theme="outlined" /> -->
-						<span style="font-size:14px;color:#666">Connect Wallet</span>
-					</a-button>
+						<span style="font-size:14px;color:#666">{{ selectedAddress }}</span> -->
+					</div>
+					<!-- 未连接钱包 -->
+					<div v-if="!selectedAddress">
+						<a-button type="link" ref="secondarySidebarTriggerBtn" @click="connectWallet">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM12 7C12 8.10457 11.1046 9 10 9C8.89543 9 8 8.10457 8 7C8 5.89543 8.89543 5 10 5C11.1046 5 12 5.89543 12 7ZM9.99993 11C7.98239 11 6.24394 12.195 5.45374 13.9157C6.55403 15.192 8.18265 16 9.99998 16C11.8173 16 13.4459 15.1921 14.5462 13.9158C13.756 12.195 12.0175 11 9.99993 11Z" fill="#111827"/>
+							</svg>
+							<!-- <a-icon type="wallet" theme="outlined" /> -->
+							<span style="font-size:14px;color:#666">Connect Wallet</span>
+						</a-button>
+					</div>
+					
 					<!-- / Header Control Buttons -->
 
 					<!-- Header Search Input -->
@@ -172,6 +186,8 @@
 
 				// The wrapper element to attach dropdowns to.
 				wrapper: document.body,
+
+				selectedAddress: null
 			}
 		},
 		methods: {
@@ -181,11 +197,92 @@
 				// Reason for the negative value is that it doesn't activate the affix unless
 				// scroller is anywhere but the top of the page.
 			},
+
+			/**
+			 * 搜索
+			 */
 			onSearch(value){
 				this.$message.info("Search is coming soon!");
 			},
-			connectWallet(){
-				this.$message.info("connect walet");
+
+			/**
+			 * 连接钱包
+			 */
+			async connectWallet(){
+				// 判断是否安装 MetaMask
+				if (window.ethereum === undefined) {
+					this.$message.warn("Please install the Metamask plugin");
+					return;
+				}
+				// 判断网络
+				if (!this._checkNetwork()) {
+					this.$message.warn("Please switch to Ropsten network");
+					return;
+				}
+				// 连接钱包
+				try {
+					const [selectedAddress] = await window.ethereum.request({ method: 'eth_requestAccounts'});
+					this._initAccount(selectedAddress);
+				} catch (error) {
+					if (error.code === 4001) { // 用户拒绝连接钱包
+						this.$message.error("User rejected");
+						return;
+					}
+				}
+				// 监听账户变更事件
+				window.ethereum.on("accountsChanged", ([newAddress]) => {
+					if (newAddress === undefined) {
+						return this._resetAccount();
+					}
+					this._initAccount(newAddress);
+				});
+				// 监听网络变更事件
+				window.ethereum.on("networkChanged", ([networkId]) => {
+					this._resetAccount();
+				});
+				// 监听网络变更事件
+			},
+
+			/**
+			 * 初始化账户
+			 */
+			_initAccount(userAddress) {
+				localStorage.setItem("selectedAddress", userAddress);
+				this.selectedAddress = userAddress;
+				this._intializeEthers();
+			},
+
+			/**
+			 * 初始化节点及合约
+			 */
+			async _intializeEthers() {
+				// We first initialize ethers by creating a provider using window.ethereum
+				this._provider = new ethers.providers.Web3Provider(window.ethereum);
+
+				// When, we initialize the contract using that provider and the token's
+				// artifact. You can do this same thing with your contracts.
+				this._token = new ethers.Contract(
+					contractAddress.Token,
+					TokenArtifact.abi,
+					this._provider.getSigner(0)
+				);
+			},
+
+			/**
+			 * 初始化账户
+			 */
+			_resetAccount() {
+				this.selectedAddress = null;
+			},
+
+			/**
+			 * 检查网络
+			 */
+			_checkNetwork() {
+				if (window.ethereum.networkVersion === '3') { // Ropsten
+					return true;
+				}
+				return false;
 			}
 		},
 		mounted: function(){

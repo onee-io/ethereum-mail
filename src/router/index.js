@@ -27,12 +27,6 @@ let routes = [
 		component: () => import('../views/Sent.vue'),
 	},
 	{
-		path: '/layout',
-		name: 'Layout',
-		layout: "dashboard",
-		component: () => import('../views/Layout.vue'),
-	},
-	{
 		path: '/dashboard',
 		name: 'Dashboard',
 		layout: "dashboard",
