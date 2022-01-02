@@ -147,6 +147,12 @@
 				tableColumns: tableColumns
 			}
 		},
+        mounted() {
+            console.log("inbox 页面挂载");
+            window.addEventListener('storage', event => {
+                console.log("监听到存储变更事件")
+            });
+        }
 	})
 
 </script>

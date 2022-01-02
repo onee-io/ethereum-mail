@@ -128,6 +128,10 @@
 
 <script>
 
+	import { ethers } from "ethers";
+	import TokenArtifact from "../../contracts/MailService.json";
+	import contractAddress from "../../contracts/contract-address.json";
+
 	const notificationsData = [
 		{
 			title: 'New message from Sophie',
@@ -237,7 +241,7 @@
 					this._initAccount(newAddress);
 				});
 				// 监听网络变更事件
-				window.ethereum.on("networkChanged", ([networkId]) => {
+				window.ethereum.on("chainChanged", ([chainId]) => {
 					this._resetAccount();
 				});
 				// 监听网络变更事件
@@ -261,11 +265,11 @@
 
 				// When, we initialize the contract using that provider and the token's
 				// artifact. You can do this same thing with your contracts.
-				this._token = new ethers.Contract(
-					contractAddress.Token,
-					TokenArtifact.abi,
-					this._provider.getSigner(0)
-				);
+				// this._token = new ethers.Contract(
+				// 	contractAddress.Token,
+				// 	TokenArtifact.abi,
+				// 	this._provider.getSigner(0)
+				// );
 			},
 
 			/**
