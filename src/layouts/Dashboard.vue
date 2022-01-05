@@ -173,7 +173,6 @@
 				this.confirmLoading = true;
 				console.log(this.mail);
 				// 加载合约
-				console.log(new ethers.providers.Web3Provider(window.ethereum));
 				let contract = new ethers.Contract(
 					contractAddress.MailService,
 					MailServiceArtifact.abi,

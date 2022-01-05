@@ -19,260 +19,30 @@
 </template>
 
 <script>
+	import { ethers } from "ethers";
+	import MailServiceArtifact from "../contracts/MailService.json";
+	import contractAddress from "../contracts/contract-address.json";
+
 	import CardMailTable from '../components/Cards/CardMailTable' ;
+
 	// 表头
 	const tableColumns = [
 		{
 			title: 'FROM',
-			dataIndex: 'author',
-			scopedSlots: { customRender: 'author' },
+			dataIndex: 'from',
+			scopedSlots: { customRender: 'from' },
+			width: 400
 		},
 		{
 			title: 'SUMMARY',
-			dataIndex: 'func',
-			scopedSlots: { customRender: 'func' },
+			dataIndex: 'mail',
+			scopedSlots: { customRender: 'mail' },
 		},
-		// {
-		// 	title: 'DATE',
-		// 	dataIndex: 'status',
-		// 	scopedSlots: { customRender: 'status' },
-		// },
 		{
 			title: 'DATE',
-			dataIndex: 'employed',
+			dataIndex: 'timestamp',
 			class: 'text-muted',
-		},
-		// {
-		// 	title: '',
-		// 	scopedSlots: { customRender: 'editBtn' },
-		// 	width: 50,
-		// },
-	];
-    // 表数据
-	const tableData = [
-        {
-			key: '1',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-		{
-			key: '2',
-			author: {
-				avatar: 'images/face-3.jpg',
-				name: 'Alexa Liras',
-				email: 'alexa@mail.com',
-			},
-			func: {
-				job: 'Programator',
-				department: 'Developer',
-			},
-			status: 0,
-			employed: '23/12/20',
-		},
-		{
-			key: '3',
-			author: {
-				avatar: 'images/face-1.jpg',
-				name: 'Laure Perrier',
-				email: 'laure@mail.com',
-			},
-			func: {
-				job: 'Executive',
-				department: 'Projects',
-			},
-			status: 1,
-			employed: '13/04/19',
-		},
-		{
-			key: '4',
-			author: {
-				avatar: 'images/face-4.jpg',
-				name: 'Miriam Eric',
-				email: 'miriam@mail.com',
-			},
-			func: {
-				job: 'Marketing',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '03/04/21',
-		},
-		{
-			key: '5',
-			author: {
-				avatar: 'images/face-5.jpeg',
-				name: 'Richard Gran',
-				email: 'richard@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 0,
-			employed: '23/03/20',
-		},
-		{
-			key: '6',
-			author: {
-				avatar: 'images/face-6.jpeg',
-				name: 'John Levi',
-				email: 'john@mail.com',
-			},
-			func: {
-				job: 'Tester',
-				department: 'Developer',
-			},
-			status: 0,
-			employed: '14/04/17',
-		},
-        {
-			key: '7',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '8',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '9',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '10',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '11',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '12',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '13',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '14',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '15',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
-		},
-        {
-			key: '16',
-			author: {
-				avatar: 'images/face-2.jpg',
-				name: 'Michael John',
-				email: 'michael@mail.com',
-			},
-			func: {
-				job: 'Manager',
-				department: 'Organization',
-			},
-			status: 1,
-			employed: '23/04/18',
+			width: 200
 		},
 	];
 
@@ -282,10 +52,42 @@
 		},
 		data() {
 			return {
-				tableData: tableData,
-				// tableData: [],
+				tableData: [],
 				tableColumns: tableColumns
 			}
+		},
+		methods: {
+			// 加载收件箱
+			async loadInbox() {
+				let provider = this.$store.state.provider;
+				if (provider == null) {
+					console.log("未连接钱包 无法加载收件箱");
+					return;
+				}
+				// 加载合约
+				let contract = new ethers.Contract(
+					contractAddress.MailService,
+					MailServiceArtifact.abi,
+					provider.getSigner(0)
+				);
+				// 调用合约
+				let inbox = await contract.inbox();
+				console.log(inbox);
+				inbox.forEach(mail => {
+					this.tableData.push({
+						key: mail.id.toString(),
+						from: mail.from,
+						mail: {
+							subject: mail.subject,
+							content: mail.content
+						},
+						timestamp: mail.timestamp.toString()
+					});
+				});
+			}
+		},
+		created() {
+			this.loadInbox();
 		}
 	})
 

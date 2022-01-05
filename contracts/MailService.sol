@@ -31,15 +31,16 @@ contract MailService is IMailService {
     // 发送邮件
     function sendMail(address[] memory to, address[] memory cc, string memory subject, string memory content) external override {        
         require(to.length != 0 || cc.length != 0, "RECIPIENT NOT NULL");
+        uint _mailId = _mailIds.current();
         MLib.Mail memory mail = MLib.Mail({
+            id: _mailId,
+            timestamp: block.timestamp,
             from: msg.sender,
             to: to,
             cc: cc,
             subject: subject,
-            content: content,
-            timestamp: block.timestamp
+            content: content
         });
-        uint _mailId = _mailIds.current();
         _mailRepository[_mailId] = mail;
         console.log("_mailRepository added a mail. id=%s", _mailId);
         _sentBox[msg.sender].push(_mailId);
