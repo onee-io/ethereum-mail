@@ -249,6 +249,10 @@
 			 */
 			_initAccount(userAddress) {
 				this.selectedAddress = userAddress;
+				// 将 provider 写入 vuex
+				let provider = new ethers.providers.Web3Provider(window.ethereum);
+				this.$store.commit('setProvider', provider);
+				console.log("vuex provider", this.$store.state.provider);
 			},
 
 			/**

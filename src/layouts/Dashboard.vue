@@ -132,17 +132,16 @@
 				// Settings drawer visiblility status.
 				showSettingsDrawer: false,
 				
+				// 模态框显隐
 				visible: false,
-
+				// 新邮件对象
 				mail: {
 					to: null,
 					subject: null,
 					content: null
 				},
-
+				// 发送按钮加载状态
 				confirmLoading: false,
-				provider: null,
-				mailServiceContract: null,
 			}
 		},
 		methods: {
@@ -165,18 +164,24 @@
 				this.visible = true;
 			},
 			async handleOk(e) {
-				console.log(this.mail);
+				// 确认是否已连接钱包
+				let provider = this.$store.state.provider;
+				if (provider == null) {
+					this.$message.error("Please connect to your wallet");
+					return;
+				}
 				this.confirmLoading = true;
+				console.log(this.mail);
 				// 加载合约
-				this.provider = new ethers.providers.Web3Provider(window.ethereum);
-				this.mailServiceContract = new ethers.Contract(
+				console.log(new ethers.providers.Web3Provider(window.ethereum));
+				let contract = new ethers.Contract(
 					contractAddress.MailService,
 					MailServiceArtifact.abi,
-					this.provider.getSigner(0)
+					provider.getSigner(0)
 				);
 				// 调用合约
 				try {
-					const tx = await this.mailServiceContract.sendMail([this.mail.to], [], this.mail.subject, this.mail.content);
+					const tx = await contract.sendMail([this.mail.to], [], this.mail.subject, this.mail.content);
 					console.log(tx.hash);
 					// 等待交易上链
 					const receipt = await tx.wait();
