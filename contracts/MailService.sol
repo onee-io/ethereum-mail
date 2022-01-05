@@ -36,7 +36,8 @@ contract MailService is IMailService {
             to: to,
             cc: cc,
             subject: subject,
-            content: content
+            content: content,
+            timestamp: block.timestamp
         });
         uint _mailId = _mailIds.current();
         _mailRepository[_mailId] = mail;

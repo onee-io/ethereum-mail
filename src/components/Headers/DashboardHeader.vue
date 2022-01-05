@@ -129,8 +129,6 @@
 <script>
 
 	import { ethers } from "ethers";
-	import TokenArtifact from "../../contracts/MailService.json";
-	import contractAddress from "../../contracts/contract-address.json";
 
 	const notificationsData = [
 		{
@@ -230,8 +228,8 @@
 				} catch (error) {
 					if (error.code === 4001) { // 用户拒绝连接钱包
 						this.$message.error("User rejected");
-						return;
 					}
+					return;
 				}
 				// 监听账户变更事件
 				window.ethereum.on("accountsChanged", ([newAddress]) => {
@@ -244,32 +242,13 @@
 				window.ethereum.on("chainChanged", ([chainId]) => {
 					this._resetAccount();
 				});
-				// 监听网络变更事件
 			},
 
 			/**
 			 * 初始化账户
 			 */
 			_initAccount(userAddress) {
-				localStorage.setItem("selectedAddress", userAddress);
 				this.selectedAddress = userAddress;
-				this._intializeEthers();
-			},
-
-			/**
-			 * 初始化节点及合约
-			 */
-			async _intializeEthers() {
-				// We first initialize ethers by creating a provider using window.ethereum
-				this._provider = new ethers.providers.Web3Provider(window.ethereum);
-
-				// When, we initialize the contract using that provider and the token's
-				// artifact. You can do this same thing with your contracts.
-				// this._token = new ethers.Contract(
-				// 	contractAddress.Token,
-				// 	TokenArtifact.abi,
-				// 	this._provider.getSigner(0)
-				// );
 			},
 
 			/**

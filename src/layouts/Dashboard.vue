@@ -44,6 +44,26 @@
 					<a-icon  style="color:#666;font-size:18px" type="plus" theme="outlined" />
 				</a-button>
 
+				<a-modal 
+					v-model="visible" 
+					title="New Message" 
+					ok-text="Send" 
+					:confirmLoading="confirmLoading" 
+					@ok="handleOk"
+					:destroyOnClose="true">
+					<a-form :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }">
+						<a-form-item label="To">
+							<a-input v-model="mail.to" />
+						</a-form-item>
+						<a-form-item label="Subject">
+							<a-input v-model="mail.subject" />
+						</a-form-item>
+						<a-form-item label="Content">
+							<a-textarea :rows="4" v-model="mail.content" />
+						</a-form-item>
+					</a-form>
+				</a-modal>
+
 				<!-- Floating Action Button For Toggling Settings Drawer -->
     			<!-- <a-button class="fab" shape="circle" @click="showSettingsDrawer = true">
 					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +80,7 @@
 			<!-- / Layout Content -->
 			
 			<!-- Settings Drawer -->
-			<DashboardSettingsDrawer
+			<!-- <DashboardSettingsDrawer
 				:showSettingsDrawer="showSettingsDrawer"
 				:navbarFixed="navbarFixed"
 				:sidebarTheme="sidebarTheme"
@@ -68,7 +88,7 @@
 				@toggleNavbarPosition="toggleNavbarPosition"
 				@updateSidebarTheme="updateSidebarTheme"
 				@updateSidebarColor="updateSidebarColor"
-			></DashboardSettingsDrawer>
+			></DashboardSettingsDrawer> -->
 			<!-- / Settings Drawer -->
 
 		</a-layout>
@@ -78,6 +98,10 @@
 </template>
 
 <script>
+
+	import { ethers } from "ethers";
+	import MailServiceArtifact from "../contracts/MailService.json";
+	import contractAddress from "../contracts/contract-address.json";
 
 	import DashboardSidebar from '../components/Sidebars/DashboardSidebar' ;
 	import DashboardHeader from '../components/Headers/DashboardHeader' ;
@@ -107,6 +131,18 @@
 
 				// Settings drawer visiblility status.
 				showSettingsDrawer: false,
+				
+				visible: false,
+
+				mail: {
+					to: null,
+					subject: null,
+					content: null
+				},
+
+				confirmLoading: false,
+				provider: null,
+				mailServiceContract: null,
 			}
 		},
 		methods: {
@@ -126,8 +162,42 @@
 				this.sidebarColor = value ;
 			},
 			createMail() {
-				this.$message.info("new mail");
-			}
+				this.visible = true;
+			},
+			async handleOk(e) {
+				console.log(this.mail);
+				this.confirmLoading = true;
+				// 加载合约
+				this.provider = new ethers.providers.Web3Provider(window.ethereum);
+				this.mailServiceContract = new ethers.Contract(
+					contractAddress.MailService,
+					MailServiceArtifact.abi,
+					this.provider.getSigner(0)
+				);
+				// 调用合约
+				try {
+					const tx = await this.mailServiceContract.sendMail([this.mail.to], [], this.mail.subject, this.mail.content);
+					console.log(tx.hash);
+					// 等待交易上链
+					const receipt = await tx.wait();
+					this.confirmLoading = false;
+					this.visible = false;
+					// 判断交易结果
+					console.log(receipt);
+					if (receipt.status === 1) {
+						this.$message.success("Sent successfully!");
+					} else {
+						this.$message.error("Fail in send!");
+					}
+				} catch (error) {
+					this.confirmLoading = false;
+					if (error.code === 4001) { // 用户拒绝连接钱包
+						this.$message.error("User rejected");
+					}
+					return;
+				}
+				// 监听事件
+			},
 		},
 		computed: {
 			// Sets layout's element's class based on route's meta data.

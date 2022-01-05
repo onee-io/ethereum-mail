@@ -11,5 +11,6 @@ library MLib {
         address[] cc; // 抄送
         string subject; // 主题
         string content; // 内容
+        uint256 timestamp; // 时间戳
     }
 }

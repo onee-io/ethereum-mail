@@ -50,7 +50,7 @@
 	];
     // 表数据
 	const tableData = [
-		{
+        {
 			key: '1',
 			author: {
 				avatar: 'images/face-2.jpg',
@@ -134,6 +134,146 @@
 			status: 0,
 			employed: '14/04/17',
 		},
+        {
+			key: '7',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '8',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '9',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '10',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '11',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '12',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '13',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '14',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '15',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
+        {
+			key: '16',
+			author: {
+				avatar: 'images/face-2.jpg',
+				name: 'Michael John',
+				email: 'michael@mail.com',
+			},
+			func: {
+				job: 'Manager',
+				department: 'Organization',
+			},
+			status: 1,
+			employed: '23/04/18',
+		},
 	];
 
 	export default ({
@@ -146,13 +286,7 @@
 				// tableData: [],
 				tableColumns: tableColumns
 			}
-		},
-        mounted() {
-            console.log("inbox 页面挂载");
-            window.addEventListener('storage', event => {
-                console.log("监听到存储变更事件")
-            });
-        }
+		}
 	})
 
 </script>
