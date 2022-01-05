@@ -20,11 +20,13 @@ import DashboardLayout from './layouts/Dashboard.vue'
 import DashboardRTLLayout from './layouts/DashboardRTL.vue'
 import router from './router'
 import store from './store/'
+import VueClipboard from 'vue-clipboard2'
 // import './plugins/click-away'
 
 import './scss/app.scss';
 
 Vue.use(Antd);
+Vue.use(VueClipboard)
 
 Vue.config.productionTip = false
 

@@ -22,6 +22,7 @@
 	import { ethers } from "ethers";
 	import MailServiceArtifact from "../contracts/MailService.json";
 	import contractAddress from "../contracts/contract-address.json";
+	import {formatDate} from '@/common/date'
 
 	import CardMailTable from '../components/Cards/CardMailTable' ;
 
@@ -58,10 +59,11 @@
 		},
 		methods: {
 			// 加载收件箱
-			async loadSent() {
+			async loadSentBox() {
 				let provider = this.$store.state.provider;
 				if (provider == null) {
-					console.log("未连接钱包 无法加载收件箱");
+					this.tableData = [];
+					console.log("未连接钱包 无法加载发件箱");
 					return;
 				}
 				// 加载合约
@@ -72,8 +74,12 @@
 				);
 				// 调用合约
 				let sentBox = await contract.sentBox();
-				console.log(sentBox);
-				sentBox.forEach(mail => {
+				console.log("load sentBox", sentBox);
+				this.tableData = [];
+				for (let i = sentBox.length - 1; i >= 0; i--) {
+					let mail = sentBox[i];
+					let date = new Date()
+              		date.setTime(Number(mail.timestamp.toString()) * 1000);
 					this.tableData.push({
 						key: mail.id.toString(),
 						from: mail.from,
@@ -81,13 +87,23 @@
 							subject: mail.subject,
 							content: mail.content
 						},
-						timestamp: mail.timestamp.toString()
+						timestamp: formatDate(date, 'yyyy-MM-dd HH:mm:ss')
 					});
-				});
+				}
+				this.$store.commit("setSentBoxRefresh", false);
 			}
 		},
 		created() {
-			this.loadSent();
+			this.loadSentBox();
+		},
+		watch: {
+			'$store.state.sentBoxRefresh'() {
+				let isRefresh = this.$store.state.sentBoxRefresh;
+				console.log("watch sentBoxRefresh change", isRefresh);
+				if (isRefresh) {
+					this.loadSentBox();
+				}
+			}
 		}
 	})
 </script>

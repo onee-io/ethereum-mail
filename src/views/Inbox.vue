@@ -22,6 +22,7 @@
 	import { ethers } from "ethers";
 	import MailServiceArtifact from "../contracts/MailService.json";
 	import contractAddress from "../contracts/contract-address.json";
+	import {formatDate} from '@/common/date'
 
 	import CardMailTable from '../components/Cards/CardMailTable' ;
 
@@ -61,6 +62,7 @@
 			async loadInbox() {
 				let provider = this.$store.state.provider;
 				if (provider == null) {
+					this.tableData = [];
 					console.log("未连接钱包 无法加载收件箱");
 					return;
 				}
@@ -72,8 +74,12 @@
 				);
 				// 调用合约
 				let inbox = await contract.inbox();
-				console.log(inbox);
-				inbox.forEach(mail => {
+				console.log("load inbox", inbox);
+				this.tableData = [];
+				for (let i = inbox.length - 1; i >= 0; i--) {
+					let mail = inbox[i];
+					let date = new Date()
+              		date.setTime(Number(mail.timestamp.toString()) * 1000);
 					this.tableData.push({
 						key: mail.id.toString(),
 						from: mail.from,
@@ -81,16 +87,25 @@
 							subject: mail.subject,
 							content: mail.content
 						},
-						timestamp: mail.timestamp.toString()
+						timestamp: formatDate(date, 'yyyy-MM-dd HH:mm:ss')
 					});
-				});
+				}
+				this.$store.commit("setInboxRefresh", false);
 			}
 		},
 		created() {
 			this.loadInbox();
+		},
+		watch: {
+			'$store.state.inboxRefresh'() {
+				let isRefresh = this.$store.state.inboxRefresh;
+				console.log("watch inboxRefresh change", isRefresh);
+				if (isRefresh) {
+					this.loadInbox();
+				}
+			}
 		}
 	})
-
 </script>
 
 <style lang="scss">

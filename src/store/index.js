@@ -8,7 +8,9 @@ Vue.use(Vuex)
 
 // 变量定义
 const state = {
-  provider: null
+  provider: null,
+  inboxRefresh: false,
+  sentBoxRefresh: false
 }
 
 // 计算过滤（获取数据前的操作）
@@ -21,6 +23,12 @@ const mutations = {
   },
   resetProvicer(state) {
     state.provider = null;
+  },
+  setInboxRefresh(state, isRefresh) {
+    state.inboxRefresh = isRefresh;
+  },
+  setSentBoxRefresh(state, isRefresh) {
+    state.sentBoxRefresh = isRefresh;
   }
 }
 
