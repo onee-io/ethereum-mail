@@ -143,7 +143,7 @@
 				}
 				// 判断网络
 				if (!this._checkNetwork()) {
-					this.$message.warn("Please switch to Ropsten network");
+					this.$message.warn("Please switch to Rinkeby network");
 					return;
 				}
 				// 连接钱包
@@ -195,7 +195,7 @@
 			 * 检查网络
 			 */
 			_checkNetwork() {
-				if (window.ethereum.networkVersion === '3') { // Ropsten
+				if (window.ethereum.networkVersion === '4') { // Rinkeby
 					return true;
 				}
 				return false;

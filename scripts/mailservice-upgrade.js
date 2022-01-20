@@ -1,10 +1,12 @@
 const { ethers, upgrades } = require("hardhat");
 
 async function main() {
-  // 部署代理合约
+  // 代理合约地址
+  const proxyAddress = "0x75E6d93B2aBB21CF5ad499F0138BE1D605b44643";
+  // 合约升级
   const MailService = await ethers.getContractFactory("MailService");
-  const mailService = await upgrades.deployProxy(MailService);
-  console.log("MailService Proxy deployed to:", mailService.address);
+  const mailService = await upgrades.upgradeProxy(proxyAddress, MailService);
+  console.log("MailService Proxy update success");
   // 写入到文件
   saveFrontendFiles(mailService);
 }
@@ -25,7 +27,7 @@ function saveFrontendFiles(mailService) {
     JSON.stringify(MailServiceArtifact, null, 2)
   );
 }
-  
+
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;

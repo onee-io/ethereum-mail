@@ -23,9 +23,19 @@ contract MailService is IMailService {
         return _getMailList(_inbox[msg.sender]);
     }
 
+    // 查询收件箱数量
+    function inboxCount() external view override returns (uint256) {
+        return this.inbox().length;
+    }
+
     // 查询发件箱
     function sentBox() external view override returns (MLib.Mail[] memory) {
         return _getMailList(_sentBox[msg.sender]);
+    }
+
+    // 查询发件箱数量
+    function sentBoxCount() external view override returns (uint256) {
+        return this.sentBox().length;
     }
 
     // 发送邮件

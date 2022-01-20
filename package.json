@@ -13,6 +13,7 @@
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.3",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/hardhat-upgrades": "^1.13.0",
     "@vue/cli-plugin-babel": "4.5.13",
     "@vue/cli-plugin-router": "4.5.13",
     "@vue/cli-service": "4.5.13",
